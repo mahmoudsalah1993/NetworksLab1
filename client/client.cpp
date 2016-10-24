@@ -73,7 +73,12 @@ void receive_file(string file_name, int client_socket){
     int remain_data = 0;
 
 	/* Receiving file size */
-    recv(client_socket, buffer, BUFSIZ, 0);//////////////////////check for error
+    recv(client_socket, buffer, BUFSIZ, 0);
+    //////////////////////check for error
+    if (strcmp(buffer, "Error 404") == 0) {
+		printf("Error 404: File not found\n");
+		return;
+	}
     file_size = atoi(buffer);
     //fprintf(stdout, "\nFile size : %d\n", file_size);
 
@@ -219,6 +224,9 @@ int main(int argc, char *argv[]) {
 		}
 		printf("DONE \n");
 	}
+	sleep(1);
+	string bye = "bye";
+	send(sockfd, bye.c_str(), 3, 0);
 	close(sockfd);
 	return 0;
 }
