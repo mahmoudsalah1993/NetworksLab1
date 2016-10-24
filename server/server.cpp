@@ -113,7 +113,7 @@ void send_file(string file_name, int peer_socket){
     sprintf(file_size, "%d", file_stat.st_size);
     cout<<"file size:"<<file_size<<endl;
     /* Sending file size */
-    int len = send(peer_socket, file_size, sizeof(file_size), 0);
+    int len = send(peer_socket, file_size, sizeof(file_size), MSG_NOSIGNAL);
     if (len < 0)
     {
           fprintf(stderr, "Error on sending greetings --> %s", strerror(errno));
@@ -145,27 +145,29 @@ void *handle_client(void *param) {
 	int numbytes = -1;
 	char received_text[100];
 	while (1) {
-        if ((numbytes = recv(*socket, received_text, 100 - 1, 0)) == -1) {
-			perror("recv");
-			exit(1);
-		}
-		received_text[numbytes] = '\0';
-		if (strcmp(received_text, "bye") == 0) {
-			printf("socket %d closed\n", *socket);
-			break;
-		}
-        bool op_type = split_str(string(received_text))[0] == "GET";
-        string file_name = split_str(string(received_text))[1];
-        if(op_type){
+		
+			if ((numbytes = recv(*socket, received_text, 100 - 1, MSG_NOSIGNAL)) <= 0) {
+				perror("recv");
+				break;
+			}
+			received_text[numbytes] = '\0';
+			if (strcmp(received_text, "bye") == 0) {
+				printf("socket %d closed\n", *socket);
+				break;
+			}
+			bool op_type = split_str(string(received_text))[0] == "GET";
+			string file_name = split_str(string(received_text))[1];
+			if(op_type){
             // GET
-            send_file(file_name, *socket);
-        }
-        else{
+				send_file(file_name, *socket);
+			}
+			else{
             //POST
-            string response = "ok";
-            send(*socket, response.c_str(), 2 , 0);
-            receive_file(file_name, *socket);
-        }
+				string response = "ok";
+				send(*socket, response.c_str(), 2 , MSG_NOSIGNAL);
+				receive_file(file_name, *socket);
+			}
+
     }
     close(*socket);
     pthread_exit(NULL);
