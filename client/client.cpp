@@ -29,13 +29,13 @@ void *get_in_addr(struct sockaddr *sa) {
 	return &(((struct sockaddr_in6*) sa)->sin6_addr);
 }
 
-string t_string(int a){
+string t_string(int a){ // convert in to string
     std::stringstream ss;
     ss << a;
     return ss.str();
 }
 
-vector<string> split_str(string s){
+vector<string> split_str(string s){ // splits string using spaces
 	stringstream ss(s);
 	std::vector<string> res;
 	string c;
@@ -47,7 +47,7 @@ vector<string> split_str(string s){
 	return res;
 }
 
-void receive_file(string file_name, int client_socket){
+void receive_file(string file_name, int client_socket){ // receives file from server in case of GET 
     ssize_t len;
     char buffer[BUFSIZ];
     int file_size;
@@ -87,7 +87,7 @@ void receive_file(string file_name, int client_socket){
     fclose(received_file);
 }
 
-void send_file(string file_name, int peer_socket){
+void send_file(string file_name, int peer_socket){ // sends file to server in case of POST
 
 	struct stat file_stat;
     cout<<file_name<<endl;

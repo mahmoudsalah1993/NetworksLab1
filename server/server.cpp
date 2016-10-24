@@ -37,13 +37,13 @@ void *get_in_addr(struct sockaddr *sa) {
 }
 
 
-string t_string(int a){
+string t_string(int a){ // convert int to string
     std::stringstream ss;
     ss << a;
     return ss.str();
 }
 
-vector<string> split_str(string s){
+vector<string> split_str(string s){ // splits string using spaces
     stringstream ss(s);
 	std::vector<string> res;
 	string c;
@@ -52,7 +52,7 @@ vector<string> split_str(string s){
 	return res;
 }
 
-void receive_file(string file_name, int client_socket){
+void receive_file(string file_name, int client_socket){ // receives file from client in case of POST request
     ssize_t len;
     char buffer[BUFSIZ];
     int file_size;
@@ -87,7 +87,7 @@ void receive_file(string file_name, int client_socket){
     fclose(received_file);
 }
 
-void send_file(string file_name, int peer_socket){
+void send_file(string file_name, int peer_socket){ // send file to client in case of GET request
 
 	struct stat file_stat;
     cout<<file_name<<endl;
@@ -139,7 +139,7 @@ void send_file(string file_name, int peer_socket){
     cout << "Server send file done\n";
 }
 
-void *handle_client(void *param) {
+void *handle_client(void *param) { // handles one client
 	int *socket = (int *) param;
 	printf("%d\n", *socket);
 	int numbytes = -1;
