@@ -94,11 +94,11 @@ void send_file(string file_name, int peer_socket){
 	int fd = open(file_name.c_str(), O_RDONLY);
 
     if (fd == -1)
-    {
+    {	
+    	//send 404
         cout<<"ERROR 404"<<endl;
         string e = "Error 404";
         send(peer_socket,e.c_str(), 9,0);
-        //send 404
         return;
     }
     /* Get file stats */
@@ -150,6 +150,10 @@ void *handle_client(void *param) {
 			exit(1);
 		}
 		received_text[numbytes] = '\0';
+		if (strcmp(received_text, "bye") == 0) {
+			printf("socket %d closed\n", *socket);
+			break;
+		}
         bool op_type = split_str(string(received_text))[0] == "GET";
         string file_name = split_str(string(received_text))[1];
         if(op_type){
@@ -249,4 +253,3 @@ int main(int argc, char *argv[]) {
 	}
 	return 0;
 }
-
