@@ -69,7 +69,7 @@ void receive_file(string file_name, int client_socket){ // receives file from cl
     {
             fprintf(stderr, "Failed to open file foo --> %s\n", strerror(errno));
 
-            exit(EXIT_FAILURE);
+            return;
     }
 
     remain_data = file_size;
@@ -88,7 +88,6 @@ void receive_file(string file_name, int client_socket){ // receives file from cl
 }
 
 void send_file(string file_name, int peer_socket){ // send file to client in case of GET request
-
 	struct stat file_stat;
     cout<<file_name<<endl;
 	int fd = open(file_name.c_str(), O_RDONLY);

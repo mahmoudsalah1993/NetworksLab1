@@ -194,9 +194,19 @@ int main(int argc, char *argv[]) {
 		} else{
 		*///recived from server
 		bool op_type = (split_str(buf)[0]=="GET");
+		
+		string file_name_open = split_str(buf)[1];
+
 		if(split_str(buf)[0]=="GET"){
 			// GET
 			receive_file(split_str(buf)[1], sockfd);
+			stringstream ss;
+			ss << "xdg-open ";
+			ss << file_name_open;
+			char* result = new char[ss.str().length()+1];
+    		strcpy(result,ss.str().c_str());
+			system(result);
+			delete result;
 		}
 		else{
 			// POST
